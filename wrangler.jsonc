@@ -1,0 +1,22 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"main": ".open-next/worker.js",
+	"name": "next-app",
+	"compatibility_date": "2026-03-05",
+	"compatibility_flags": [
+		"nodejs_compat",
+		"global_fetch_strictly_public"
+	],
+	"assets": {
+		"directory": ".open-next/assets",
+		"binding": "ASSETS"
+	},
+	"d1_databases": [
+		{
+			"binding": "profile_card_db",
+			"database_name": "profile-card-db",
+			"database_id": "d47c26b4-2a92-47b2-afd2-cd89a0840d94",
+			"remote": true
+		}
+	]
+}
