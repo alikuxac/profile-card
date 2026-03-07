@@ -7,10 +7,14 @@ export async function onRequestGet(context: any) {
         const db = drizzle(context.env.profile_card_db, { schema });
         const allProjects = await db.select().from(schema.projects).orderBy(desc(schema.projects.order));
 
+        const adminSecret = context.env.ADMIN_SECRET;
+        const reqSecret = context.request.headers.get('x-admin-secret');
+        const isAuth = adminSecret && reqSecret === adminSecret;
+
         return new Response(JSON.stringify(allProjects), {
             headers: {
                 'Content-Type': 'application/json',
-                'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=3600'
+                'Cache-Control': isAuth ? 'no-store, no-cache, must-revalidate' : 'public, s-maxage=60, stale-while-revalidate=86400'
             }
         });
     } catch (e: any) {

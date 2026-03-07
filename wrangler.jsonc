@@ -10,7 +10,8 @@
 		{
 			"binding": "profile_card_db",
 			"database_name": "profile-card-db",
-			"database_id": "d47c26b4-2a92-47b2-afd2-cd89a0840d94"
+			"database_id": "d47c26b4-2a92-47b2-afd2-cd89a0840d94",
+			"migrations_dir": "drizzle"
 		}
 	]
 }

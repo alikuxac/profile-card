@@ -22,9 +22,12 @@ export default function DonateManager() {
     }, []);
 
     const fetchData = async () => {
+        const secret = document.cookie.split('; ').find(row => row.startsWith('admin_token='))?.split('=')[1] || '';
+        const headers = { 'x-admin-secret': secret };
+
         const [donatesRes, groupsRes] = await Promise.all([
-            fetch('/api/donate'),
-            fetch('/api/donate-groups')
+            fetch('/api/donate', { headers }),
+            fetch('/api/donate-groups', { headers })
         ]);
         const donatesData = await donatesRes.json() as any;
         const groupsData = await groupsRes.json() as any;

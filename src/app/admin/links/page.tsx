@@ -29,9 +29,12 @@ export default function LinkManager() {
     }, []);
 
     const fetchData = async () => {
+        const secret = document.cookie.split('; ').find(row => row.startsWith('admin_token='))?.split('=')[1] || '';
+        const headers = { 'x-admin-secret': secret };
+
         const [linksRes, groupsRes] = await Promise.all([
-            fetch('/api/links'),
-            fetch('/api/link-groups')
+            fetch('/api/links', { headers }),
+            fetch('/api/link-groups', { headers })
         ]);
         const linksData = await linksRes.json() as any;
         const groupsData = await groupsRes.json() as any;

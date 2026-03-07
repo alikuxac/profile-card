@@ -22,9 +22,12 @@ export default function ProjectManager() {
     }, []);
 
     const fetchData = async () => {
+        const secret = document.cookie.split('; ').find(row => row.startsWith('admin_token='))?.split('=')[1] || '';
+        const headers = { 'x-admin-secret': secret };
+
         const [projectsRes, groupsRes] = await Promise.all([
-            fetch('/api/projects'),
-            fetch('/api/project-groups')
+            fetch('/api/projects', { headers }),
+            fetch('/api/project-groups', { headers })
         ]);
         const projectsData = await projectsRes.json() as any;
         const groupsData = await groupsRes.json() as any;
