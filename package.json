@@ -1,6 +1,6 @@
 {
   "name": "profile-card",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
     "build": "next build",
@@ -9,7 +9,10 @@
     "lint": "eslint",
     "preview": "wrangler pages dev out",
     "deploy": "wrangler pages deploy out",
-    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "wrangler d1 migrations apply profile-card-db --remote",
+    "db:migrate:local": "wrangler d1 migrations apply profile-card-db --local"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.1",

@@ -1,13 +1,13 @@
 import { drizzle } from 'drizzle-orm/d1';
 import * as schema from '../../db/schema';
-import { desc } from 'drizzle-orm';
+import { asc, desc } from 'drizzle-orm';
 
 export async function onRequestGet(context: any) {
     try {
         const db = drizzle(context.env.profile_card_db, { schema });
-        const allProjects = await db.select().from(schema.projects).orderBy(desc(schema.projects.order));
+        const allGroups = await db.select().from(schema.donateGroups).orderBy(asc(schema.donateGroups.order));
 
-        return new Response(JSON.stringify(allProjects), {
+        return new Response(JSON.stringify(allGroups), {
             headers: {
                 'Content-Type': 'application/json',
                 'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=3600'
@@ -23,21 +23,16 @@ export async function onRequestPost(context: any) {
         const body = await context.request.json();
         const db = drizzle(context.env.profile_card_db, { schema });
 
-        const lastItem = await db.select()
-            .from(schema.projects)
-            .orderBy(desc(schema.projects.order))
+        const lastGroup = await db.select()
+            .from(schema.donateGroups)
+            .orderBy(desc(schema.donateGroups.order))
             .limit(1);
 
-        const nextOrder = lastItem.length > 0 ? lastItem[0].order + 1 : 0;
+        const nextOrder = lastGroup.length > 0 ? lastGroup[0].order + 1 : 0;
 
-        const result = await db.insert(schema.projects).values({
+        const result = await db.insert(schema.donateGroups).values({
             id: crypto.randomUUID(),
-            title: body.title,
-            description: body.description,
-            url: body.url,
-            githubUrl: body.githubUrl,
-            coverImage: body.coverImage,
-            groupId: body.groupId,
+            name: body.name,
             order: nextOrder
         }).returning();
         return Response.json(result[0]);

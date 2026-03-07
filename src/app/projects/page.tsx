@@ -5,22 +5,31 @@ import ProjectCard from '@/components/project-card';
 
 export default function ProjectsPage() {
     const [allProjects, setAllProjects] = useState<any[]>([]);
+    const [groups, setGroups] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchProjects = async () => {
+        const fetchData = async () => {
             try {
-                const res = await fetch('/api/projects');
-                const data = await res.json() as any;
-                if (!data.error) setAllProjects(data);
+                const [projectsRes, groupsRes] = await Promise.all([
+                    fetch('/api/projects'),
+                    fetch('/api/project-groups')
+                ]);
+                const projectsData = await projectsRes.json() as any;
+                const groupsData = await groupsRes.json() as any;
+
+                if (!projectsData.error) setAllProjects(projectsData);
+                if (!groupsData.error) setGroups(groupsData);
             } catch (e) {
                 console.error("Failed to fetch projects", e);
             } finally {
                 setLoading(false);
             }
         };
-        fetchProjects();
+        fetchData();
     }, []);
+
+    const others = allProjects.filter(p => !p.groupId);
 
     return (
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
@@ -32,14 +41,41 @@ export default function ProjectsPage() {
             {loading ? (
                 <div style={{ textAlign: 'center', color: 'var(--muted-foreground)' }}>Loading projects...</div>
             ) : (
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                    gap: '2rem'
-                }}>
-                    {allProjects.map((project) => (
-                        <ProjectCard key={project.id} project={project} />
-                    ))}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+                    {groups.map(group => {
+                        const groupProjects = allProjects.filter(p => p.groupId === group.id);
+                        if (groupProjects.length === 0) return null;
+
+                        return (
+                            <section key={group.id}>
+                                <h3 style={{ marginBottom: '1.5rem', color: 'var(--primary)' }}>{group.name}</h3>
+                                <div style={{
+                                    display: 'grid',
+                                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                                    gap: '2rem'
+                                }}>
+                                    {groupProjects.map((project) => (
+                                        <ProjectCard key={project.id} project={project} />
+                                    ))}
+                                </div>
+                            </section>
+                        );
+                    })}
+
+                    {others.length > 0 && (
+                        <section>
+                            {groups.length > 0 && <h3 style={{ marginBottom: '1.5rem', color: 'var(--primary)' }}>Others</h3>}
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                                gap: '2rem'
+                            }}>
+                                {others.map((project) => (
+                                    <ProjectCard key={project.id} project={project} />
+                                ))}
+                            </div>
+                        </section>
+                    )}
                 </div>
             )}
         </div>
