@@ -16,7 +16,7 @@ export default function ProjectManager() {
 
     const fetchProjects = async () => {
         const res = await fetch('/api/projects');
-        const data = await res.json();
+        const data = await res.json() as any;
         if (!data.error) setProjects(data);
     };
 

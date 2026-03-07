@@ -1,18 +1,26 @@
-import { getDb } from '@/db';
-import { projects } from '@/db/schema';
+'use client';
+
+import { useState, useEffect } from 'react';
 import ProjectCard from '@/components/project-card';
-import { desc } from 'drizzle-orm';
 
-export const runtime = 'edge';
+export default function ProjectsPage() {
+    const [allProjects, setAllProjects] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
-export default async function ProjectsPage() {
-    let allProjects: any[] = [];
-    try {
-        const db = getDb(process.env as any);
-        allProjects = await db.select().from(projects).orderBy(desc(projects.order));
-    } catch (e) {
-        console.error("Failed to fetch projects", e);
-    }
+    useEffect(() => {
+        const fetchProjects = async () => {
+            try {
+                const res = await fetch('/api/projects');
+                const data = await res.json() as any;
+                if (!data.error) setAllProjects(data);
+            } catch (e) {
+                console.error("Failed to fetch projects", e);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchProjects();
+    }, []);
 
     return (
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
@@ -21,15 +29,19 @@ export default async function ProjectsPage() {
                 <p style={{ color: 'var(--muted-foreground)', fontWeight: '600', textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>A collection of things I&apos;ve built and worked on.</p>
             </div>
 
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                gap: '2rem'
-            }}>
-                {allProjects.map((project) => (
-                    <ProjectCard key={project.id} project={project} />
-                ))}
-            </div>
+            {loading ? (
+                <div style={{ textAlign: 'center', color: 'var(--muted-foreground)' }}>Loading projects...</div>
+            ) : (
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                    gap: '2rem'
+                }}>
+                    {allProjects.map((project) => (
+                        <ProjectCard key={project.id} project={project} />
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

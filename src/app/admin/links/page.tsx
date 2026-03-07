@@ -29,8 +29,8 @@ export default function LinkManager() {
             fetch('/api/links'),
             fetch('/api/link-groups')
         ]);
-        const linksData = await linksRes.json();
-        const groupsData = await groupsRes.json();
+        const linksData = await linksRes.json() as any;
+        const groupsData = await groupsRes.json() as any;
 
         if (!linksData.error) setLinks(linksData);
         if (!groupsData.error) setGroups(groupsData);

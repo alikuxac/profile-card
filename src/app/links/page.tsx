@@ -1,22 +1,33 @@
-import { getDb } from '@/db';
-import { links, linkGroups } from '@/db/schema';
+'use client';
+
+import { useState, useEffect } from 'react';
 import LinkList from '@/components/link-list';
-import { asc } from 'drizzle-orm';
 
-export const runtime = 'edge';
+export default function LinksPage() {
+    const [allLinks, setAllLinks] = useState<any[]>([]);
+    const [allGroups, setAllGroups] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
-export default async function LinksPage(props: any) {
-    const env = props.context?.cloudflare?.env || process.env;
-    let allLinks: any[] = [];
-    let allGroups: any[] = [];
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [linksRes, groupsRes] = await Promise.all([
+                    fetch('/api/links'),
+                    fetch('/api/link-groups')
+                ]);
+                const linksData = await linksRes.json() as any;
+                const groupsData = await groupsRes.json() as any;
 
-    try {
-        const db = getDb(env);
-        allLinks = await db.select().from(links).orderBy(asc(links.order));
-        allGroups = await db.select().from(linkGroups).orderBy(asc(linkGroups.order));
-    } catch (e) {
-        console.error("DB fetch failed", e);
-    }
+                if (!linksData.error) setAllLinks(linksData);
+                if (!groupsData.error) setAllGroups(groupsData);
+            } catch (e) {
+                console.error("Fetch failed", e);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
 
     return (
         <div style={{ maxWidth: '680px', margin: '0 auto', padding: '2rem 1rem' }}>
@@ -41,7 +52,11 @@ export default async function LinksPage(props: any) {
                 <p style={{ color: 'var(--muted-foreground)', fontWeight: '500' }}>Find me on other platforms & connectivity</p>
             </div>
 
-            <LinkList links={allLinks} groups={allGroups} />
+            {loading ? (
+                <div style={{ textAlign: 'center', color: 'var(--muted-foreground)' }}>Loading links...</div>
+            ) : (
+                <LinkList links={allLinks} groups={allGroups} />
+            )}
         </div>
     );
 }

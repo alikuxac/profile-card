@@ -1,22 +1,16 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"main": ".open-next/worker.js",
-	"name": "next-app",
+	"name": "profile-card",
 	"compatibility_date": "2026-03-05",
 	"compatibility_flags": [
-		"nodejs_compat",
-		"global_fetch_strictly_public"
+		"nodejs_compat"
 	],
-	"assets": {
-		"directory": ".open-next/assets",
-		"binding": "ASSETS"
-	},
+	"pages_build_output_dir": "out",
 	"d1_databases": [
 		{
 			"binding": "profile_card_db",
 			"database_name": "profile-card-db",
-			"database_id": "d47c26b4-2a92-47b2-afd2-cd89a0840d94",
-			"remote": true
+			"database_id": "d47c26b4-2a92-47b2-afd2-cd89a0840d94"
 		}
 	]
 }

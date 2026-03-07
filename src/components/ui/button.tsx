@@ -62,8 +62,8 @@ export default function Button({
         <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            style={getStyles()}
-            {...props}
+            style={getStyles() as any}
+            {...props as any}
         >
             {children}
         </motion.button>
