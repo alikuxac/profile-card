@@ -14,7 +14,7 @@ export async function onRequestGet(context: any) {
         return new Response(JSON.stringify(allDonates), {
             headers: {
                 'Content-Type': 'application/json',
-                'Cache-Control': isAuth ? 'no-store, no-cache, must-revalidate' : 'public, max-age=0, s-maxage=60, stale-while-revalidate=86400'
+                'Cache-Control': isAuth ? 'no-store, no-cache, must-revalidate' : 'public, max-age=0, s-maxage=15'
             }
         });
     } catch (e: any) {
