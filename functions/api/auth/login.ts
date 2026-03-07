@@ -1,11 +1,17 @@
 export async function onRequestPost(context: any) {
     try {
         const body = await context.request.json();
-        const { username, password } = body;
+        const { password } = body;
+        const adminSecret = context.env.ADMIN_SECRET;
 
-        // Simple hardcoded auth for demo/production (bạn có thể đổi sau)
-        if (username === 'admin' && password === 'admin') {
-            return Response.json({ success: true, token: 'fake-jwt-token' });
+        if (adminSecret && password === adminSecret) {
+            return new Response(JSON.stringify({ success: true }), {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Set-Cookie': `admin_token=${password}; Path=/; SameSite=Lax; Max-Age=31536000`
+                }
+            });
         }
 
         return Response.json({ error: 'Invalid credentials' }, { status: 401 });

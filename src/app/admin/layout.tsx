@@ -1,13 +1,34 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { LayoutDashboard, Link as LinkIcon, Heart, FolderCode, LogOut } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
+    const router = useRouter();
     const isLoginPage = pathname === '/admin/login';
+    const [isAuthorized, setIsAuthorized] = useState(false);
 
+    useEffect(() => {
+        if (!isLoginPage) {
+            const token = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('admin_token='))
+                ?.split('=')[1];
+
+            if (!token) {
+                router.push('/admin/login');
+            } else {
+                setIsAuthorized(true);
+            }
+        } else {
+            setIsAuthorized(true);
+        }
+    }, [pathname, isLoginPage, router]);
+
+    if (!isAuthorized) return null;
     if (isLoginPage) return <div style={{ paddingTop: '2rem' }}>{children}</div>;
 
     const navItems = [
