@@ -11,7 +11,7 @@ export default function ProjectManager() {
     const [groups, setGroups] = useState<any[]>([]);
     const [isAdding, setIsAdding] = useState(false);
     const [isAddingGroup, setIsAddingGroup] = useState(false);
-    const [newProject, setNewProject] = useState({ title: '', description: '', url: '', githubUrl: '', coverImage: '', groupId: '' });
+    const [newProject, setNewProject] = useState({ title: '', description: '', url: '', githubUrl: '', coverImage: '', groupId: '', slug: '' });
     const [newGroup, setNewGroup] = useState({ name: '' });
 
     const projectTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -74,7 +74,7 @@ export default function ProjectManager() {
         });
         if (res.ok) {
             setIsAdding(false);
-            setNewProject({ title: '', description: '', url: '', githubUrl: '', coverImage: '', groupId: '' });
+            setNewProject({ title: '', description: '', url: '', githubUrl: '', coverImage: '', groupId: '', slug: '' });
             fetchData();
         }
     };
@@ -170,6 +170,13 @@ export default function ProjectManager() {
                                 value={newProject.title}
                                 onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
                                 required
+                                className="glass"
+                                style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                            />
+                            <input
+                                placeholder="Custom Slug (optional, e.g. profile-card)"
+                                value={newProject.slug}
+                                onChange={(e) => setNewProject({ ...newProject, slug: e.target.value })}
                                 className="glass"
                                 style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
                             />

@@ -15,6 +15,27 @@
       "when": 1772874132827,
       "tag": "0001_medical_the_professor",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1772903910497,
+      "tag": "0002_loose_steel_serpent",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1772904725073,
+      "tag": "0003_petite_lady_vermin",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1772953746932,
+      "tag": "0004_kind_fenris",
+      "breakpoints": true
     }
   ]
 }

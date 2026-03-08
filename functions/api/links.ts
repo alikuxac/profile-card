@@ -38,6 +38,7 @@ export async function onRequestPost(context: any) {
 
         const result = await db.insert(schema.links).values({
             id: crypto.randomUUID(), // Dùng Cloudflare built-in crypto
+            slug: body.slug || crypto.randomUUID().split('-')[0],
             title: body.title,
             url: body.url,
             icon: body.icon,

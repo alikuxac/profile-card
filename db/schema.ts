@@ -8,12 +8,14 @@ export const linkGroups = sqliteTable('link_groups', {
 
 export const links = sqliteTable('links', {
     id: text('id').primaryKey(),
+    slug: text('slug').unique(),
     groupId: text('group_id').references(() => linkGroups.id),
     title: text('title').notNull(),
     url: text('url').notNull(),
     icon: text('icon'),
     color: text('color'),
     order: integer('order').default(0).notNull(),
+    clicks: integer('clicks').default(0).notNull(),
 });
 
 export const projectGroups = sqliteTable('project_groups', {
@@ -24,6 +26,7 @@ export const projectGroups = sqliteTable('project_groups', {
 
 export const projects = sqliteTable('projects', {
     id: text('id').primaryKey(),
+    slug: text('slug').unique(),
     groupId: text('group_id').references(() => projectGroups.id),
     title: text('title').notNull(),
     description: text('description'),
@@ -31,6 +34,7 @@ export const projects = sqliteTable('projects', {
     githubUrl: text('github_url'),
     coverImage: text('cover_image'),
     order: integer('order').default(0).notNull(),
+    clicks: integer('clicks').default(0).notNull(),
 });
 
 export const donateGroups = sqliteTable('donate_groups', {
@@ -47,4 +51,9 @@ export const donates = sqliteTable('donates', {
     accountName: text('account_name').notNull(),
     accountNumber: text('account_number').notNull(),
     order: integer('order').default(0).notNull(),
+});
+
+export const pageViews = sqliteTable('page_views', {
+    date: text('date').primaryKey(),
+    views: integer('views').default(0).notNull(),
 });

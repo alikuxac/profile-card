@@ -37,6 +37,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import GoogleAnalytics from "@/components/google-analytics";
+import Background from "@/components/background";
 
 export default function RootLayout({
   children,
@@ -45,12 +46,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable}`} style={{
-        backgroundImage: 'url(/bg.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
-      }}>
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <Background />
         <GoogleAnalytics ga_id="G-5V4SRB0GEQ" />
         <ThemeProvider
           attribute="data-theme"

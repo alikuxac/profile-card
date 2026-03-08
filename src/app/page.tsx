@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Zap, Target, BookOpen, ChevronDown, ChevronUp } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Home() {
   const [showSkills, setShowSkills] = useState(false);
@@ -33,23 +34,29 @@ export default function Home() {
         style={{ textAlign: 'center', maxWidth: '800px' }}
       >
         <div style={{ position: 'relative', display: 'inline-block', marginBottom: '1.5rem' }}>
-          <div className="original-pic" style={{ width: '122px', height: '122px', padding: '5px' }}>
-            <img src="/pic.png" alt="Profile" style={{ width: '112px', height: '112px' }} />
+          <div className="original-pic" style={{ width: '122px', height: '122px', padding: '5px', position: 'relative', overflow: 'hidden' }}>
+            <Image
+              src="/pic.png"
+              alt="Profile"
+              fill
+              priority
+              style={{ borderRadius: '50%', objectFit: 'cover', padding: '5px' }}
+            />
           </div>
           <div style={{
             position: 'absolute',
             bottom: '6px',
             right: '6px',
             background: 'var(--primary)',
-            color: 'white',
+            color: 'var(--primary-foreground)',
             padding: '4px 12px',
             borderRadius: '20px',
-            fontSize: '0.75rem',
+            fontSize: '0.85rem',
             fontWeight: 'bold',
             display: 'flex',
             alignItems: 'center',
             gap: '5px',
-            boxShadow: '0 4px 12px rgba(99, 102, 241, 0.4)'
+            boxShadow: '0 4px 12px rgba(79, 70, 229, 0.3)'
           }}>
             <Zap size={12} fill="currentColor" /> Online
           </div>
@@ -66,7 +73,7 @@ export default function Home() {
           <Link href="/projects" className="original-contact-btn" style={{
             marginTop: 0,
             background: 'var(--primary)',
-            color: 'white',
+            color: 'var(--primary-foreground)',
             display: 'flex',
             alignItems: 'center',
             gap: '0.65rem',

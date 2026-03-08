@@ -18,7 +18,7 @@ export default function LinkManager() {
     const [isAddingLink, setIsAddingLink] = useState(false);
     const [isAddingGroup, setIsAddingGroup] = useState(false);
 
-    const [newLink, setNewLink] = useState({ title: '', url: '', icon: '', color: '', groupId: '' });
+    const [newLink, setNewLink] = useState({ title: '', url: '', icon: '', color: '', groupId: '', slug: '' });
     const [newGroup, setNewGroup] = useState({ name: '' });
 
     const linksTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -81,7 +81,7 @@ export default function LinkManager() {
         });
         if (res.ok) {
             setIsAddingLink(false);
-            setNewLink({ title: '', url: '', icon: '', color: '', groupId: '' });
+            setNewLink({ title: '', url: '', icon: '', color: '', groupId: '', slug: '' });
             fetchData();
         }
     };
@@ -185,6 +185,13 @@ export default function LinkManager() {
                                 value={newLink.url}
                                 onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
                                 required
+                                className="glass"
+                                style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                            />
+                            <input
+                                placeholder="Custom Slug (optional, e.g. github)"
+                                value={newLink.slug}
+                                onChange={(e) => setNewLink({ ...newLink, slug: e.target.value })}
                                 className="glass"
                                 style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
                             />

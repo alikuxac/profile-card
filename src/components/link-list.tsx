@@ -27,6 +27,7 @@ interface LinkItem {
     groupId: string | null;
     title: string;
     url: string;
+    slug?: string;
     icon?: string;
     color?: string;
 }
@@ -53,9 +54,11 @@ export default function LinkList({ links, groups }: { links: LinkItem[], groups:
         return (
             <motion.a
                 key={link.id}
-                href={link.url}
+                href={`/l/${link.slug || link.id}`}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer nofollow"
+                title={link.title}
+                aria-label={`Visit ${link.title}`}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}

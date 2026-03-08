@@ -36,6 +36,7 @@ export async function onRequestPost(context: any) {
 
         const result = await db.insert(schema.projects).values({
             id: crypto.randomUUID(),
+            slug: body.slug || crypto.randomUUID().split('-')[0],
             title: body.title,
             description: body.description,
             url: body.url,

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import LinkList from '@/components/link-list';
+import Image from 'next/image';
 
 export default function LinksPage() {
     const [allLinks, setAllLinks] = useState<any[]>([]);
@@ -40,12 +41,16 @@ export default function LinksPage() {
                     background: 'var(--secondary)',
                     margin: '0 auto 1.5rem',
                     border: '1px solid var(--border)',
-                    boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
+                    boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                    position: 'relative',
+                    overflow: 'hidden'
                 }}>
-                    <img
+                    <Image
                         src="/pic.png"
                         alt="Profile"
-                        style={{ width: '100%', height: '100%', borderRadius: '30px', objectFit: 'cover' }}
+                        fill
+                        priority
+                        style={{ borderRadius: '30px', objectFit: 'cover' }}
                     />
                 </div>
                 <h1 style={{ fontSize: '2.25rem', fontWeight: '900', marginBottom: '0.5rem' }}>Alikuxac<span style={{ color: 'var(--primary)' }}>.</span></h1>

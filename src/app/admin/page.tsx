@@ -1,14 +1,47 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Card from '@/components/ui/card';
-import { Link as LinkIcon, Heart, FolderCode, MousePointerClick } from 'lucide-react';
+import { Link as LinkIcon, Heart, FolderCode, MousePointerClick, Zap } from 'lucide-react';
 
 export default function AdminDashboard() {
+    const [statsData, setStatsData] = useState({
+        totalLinks: 0,
+        donateMethods: 0,
+        activeProjects: 0,
+        totalClicks: 0,
+        totalViews: 0
+    });
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const [statsRes, viewsRes] = await Promise.all([
+                    fetch('/api/stats'),
+                    fetch('/api/views')
+                ]);
+
+                if (statsRes.ok && viewsRes.ok) {
+                    const stats = await statsRes.json() as any;
+                    const views = await viewsRes.json() as any;
+                    setStatsData({
+                        ...stats,
+                        totalViews: views.totalViews
+                    });
+                }
+            } catch (error) {
+                console.error("Failed to fetch stats");
+            }
+        };
+        fetchStats();
+    }, []);
+
     const stats = [
-        { label: 'Total Links', value: '0', icon: <LinkIcon size={24} />, color: '#6366f1' },
-        { label: 'Donate Methods', value: '0', icon: <Heart size={24} />, color: '#ec4899' },
-        { label: 'Active Projects', value: '0', icon: <FolderCode size={24} />, color: '#10b981' },
-        { label: 'Link Clicks', value: 'Soon', icon: <MousePointerClick size={24} />, color: '#f59e0b' },
+        { label: 'Total Links', value: statsData.totalLinks, icon: <LinkIcon size={24} />, color: '#6366f1' },
+        { label: 'Donate Methods', value: statsData.donateMethods, icon: <Heart size={24} />, color: '#ec4899' },
+        { label: 'Active Projects', value: statsData.activeProjects, icon: <FolderCode size={24} />, color: '#10b981' },
+        { label: 'Link Clicks', value: statsData.totalClicks, icon: <MousePointerClick size={24} />, color: '#f59e0b' },
+        { label: 'Web Views', value: statsData.totalViews, icon: <Zap size={24} />, color: '#a855f7' },
     ];
 
     return (
