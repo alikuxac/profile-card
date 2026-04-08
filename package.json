@@ -15,7 +15,7 @@
     "db:migrate:local": "wrangler d1 migrations apply profile-card-db --local"
   },
   "dependencies": {
-    "drizzle-orm": "^0.45.1",
+    "drizzle-orm": "^0.45.2",
     "framer-motion": "^12.35.0",
     "lucide-react": "^0.577.0",
     "next": "15.5.12",
