@@ -15,25 +15,25 @@
     "db:migrate:local": "wrangler d1 migrations apply profile-card-db --local"
   },
   "dependencies": {
-    "drizzle-orm": "^0.45.1",
-    "framer-motion": "^12.35.0",
-    "lucide-react": "^0.577.0",
-    "next": "15.5.12",
+    "drizzle-orm": "^0.45.2",
+    "framer-motion": "^13.3.0",
+    "lucide-react": "^1.46.0",
+    "next": "16.3.5",
     "next-themes": "^0.4.6",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "uuid": "^13.0.0"
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "uuid": "^14.0.2"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260305.1",
-    "@types/node": "^20",
+    "@cloudflare/workers-types": "^5.20260916.1",
+    "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/uuid": "^10.0.0",
-    "drizzle-kit": "^0.31.9",
-    "eslint": "^9",
-    "eslint-config-next": "^15.5.12",
-    "typescript": "^5",
-    "wrangler": "^4.70.0"
+    "drizzle-kit": "^0.31.10",
+    "eslint": "^10",
+    "eslint-config-next": "^16.3.5",
+    "typescript": "^7",
+    "wrangler": "^4.132.0"
   }
 }

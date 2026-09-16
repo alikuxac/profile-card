@@ -1,7 +1,7 @@
 'use client';
 
 import Card from './ui/card';
-import { Github, ExternalLink } from 'lucide-react';
+import { GitCommit, ExternalLink } from 'lucide-react';
 import Button from './ui/button';
 import Image from 'next/image';
 
@@ -55,7 +55,7 @@ export default function ProjectCard({ project }: { project: any }) {
                     {project.githubUrl && (
                         <a href={project.githubUrl} target="_blank" rel="noopener noreferrer nofollow" title={`View source code of ${project.title} on GitHub`} aria-label={`View source code of ${project.title} on GitHub`}>
                             <Button variant="outline" size="sm">
-                                <Github size={16} />
+                                <GitCommit size={16} />
                             </Button>
                         </a>
                     )}

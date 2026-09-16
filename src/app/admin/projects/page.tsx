@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Card from '@/components/ui/card';
 import Button from '@/components/ui/button';
-import { Plus, Trash2, Edit2, Save, X, Globe, Github, GripVertical, Layers } from 'lucide-react';
+import { Plus, Trash2, Edit2, Save, X, Globe, GitCommit, GripVertical, Layers } from 'lucide-react';
 import { Reorder } from 'framer-motion';
 
 export default function ProjectManager() {
@@ -246,7 +246,7 @@ export default function ProjectManager() {
                                 <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem', marginLeft: '2.25rem' }}>{project.description}</p>
                                 <div style={{ display: 'flex', gap: '1rem', marginLeft: '2.25rem' }}>
                                     {project.url && <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8rem' }}><Globe size={14} color="var(--primary)" /> Demo</div>}
-                                    {project.githubUrl && <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8rem' }}><Github size={14} /> Repository</div>}
+                                    {project.githubUrl && <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8rem' }}><GitCommit size={14} /> Repository</div>}
                                 </div>
                             </Card>
                         </Reorder.Item>
