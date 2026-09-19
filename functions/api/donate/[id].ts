@@ -6,13 +6,7 @@ export async function onRequestDelete(context: any) {
     try {
         const id = context.params.id;
         const db = drizzle(context.env.profile_card_db, { schema });
-
-        await db.update(schema.donates)
-            .set({ groupId: null })
-            .where(eq(schema.donates.groupId, id));
-
-        await db.delete(schema.donateGroups).where(eq(schema.donateGroups.id, id));
-
+        await db.delete(schema.donates).where(eq(schema.donates.id, id));
         return Response.json({ success: true });
     } catch (e: any) {
         return Response.json({ error: e.message }, { status: 500 });
@@ -24,11 +18,13 @@ export async function onRequestPatch(context: any) {
         const id = context.params.id;
         const body = await context.request.json();
         const db = drizzle(context.env.profile_card_db, { schema });
-
-        const result = await db.update(schema.donateGroups).set({
-            name: body.name
-        }).where(eq(schema.donateGroups.id, id)).returning();
-
+        const result = await db.update(schema.donates).set({
+            type: body.type,
+            provider: body.provider,
+            accountName: body.accountName,
+            accountNumber: body.accountNumber,
+            groupId: body.groupId || null,
+        }).where(eq(schema.donates.id, id)).returning();
         return Response.json(result[0]);
     } catch (e: any) {
         return Response.json({ error: e.message }, { status: 500 });

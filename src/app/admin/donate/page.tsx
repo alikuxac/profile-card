@@ -11,8 +11,13 @@ export default function DonateManager() {
     const [groups, setGroups] = useState<any[]>([]);
     const [isAdding, setIsAdding] = useState(false);
     const [isAddingGroup, setIsAddingGroup] = useState(false);
+    const [editingDonateId, setEditingDonateId] = useState<string | null>(null);
+    const [editingGroupId, setEditingGroupId] = useState<string | null>(null);
+
     const [newDonate, setNewDonate] = useState({ type: 'bank', provider: '', accountName: '', accountNumber: '', groupId: '' });
+    const [editDonate, setEditDonate] = useState({ id: '', type: 'bank', provider: '', accountName: '', accountNumber: '', groupId: '' });
     const [newGroup, setNewGroup] = useState({ name: '' });
+    const [editGroup, setEditGroup] = useState({ id: '', name: '' });
 
     const donateTimerRef = useRef<NodeJS.Timeout | null>(null);
     const groupTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -67,15 +72,56 @@ export default function DonateManager() {
 
     const handleAddDonate = async (e: React.FormEvent) => {
         e.preventDefault();
+        const payload = preparePayload(newDonate);
         const res = await fetch('/api/donate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newDonate)
+            body: JSON.stringify(payload)
         });
         if (res.ok) {
             setIsAdding(false);
             setNewDonate({ type: 'bank', provider: '', accountName: '', accountNumber: '', groupId: '' });
             fetchData();
+        }
+    };
+
+    const handleStartEditDonate = (item: any) => {
+        setEditingDonateId(item.id);
+        setEditDonate({
+            id: item.id,
+            type: item.type || 'bank',
+            provider: item.provider || '',
+            accountName: item.accountName || '',
+            accountNumber: item.accountNumber || '',
+            groupId: item.groupId || ''
+        });
+    };
+
+    const handleUpdateDonate = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const payload = preparePayload(editDonate);
+        const res = await fetch(`/api/donate/${editDonate.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+            setEditingDonateId(null);
+            fetchData();
+        }
+    };
+
+    const preparePayload = (donateState: typeof newDonate) => {
+        const { type, provider, accountName, accountNumber, groupId } = donateState;
+        switch (type) {
+            case 'paypal':
+                return { type, provider: 'PayPal', accountName: accountName || 'PayPal', accountNumber, groupId };
+            case 'coffee':
+                return { type, provider: provider || 'Buy Me a Coffee', accountName: accountName || 'Support', accountNumber, groupId };
+            case 'crypto':
+                return { type, provider, accountName: accountName || 'Crypto Wallet', accountNumber, groupId };
+            default:
+                return { type, provider, accountName, accountNumber, groupId };
         }
     };
 
@@ -89,6 +135,24 @@ export default function DonateManager() {
         if (res.ok) {
             setIsAddingGroup(false);
             setNewGroup({ name: '' });
+            fetchData();
+        }
+    };
+
+    const handleStartEditGroup = (group: any) => {
+        setEditingGroupId(group.id);
+        setEditGroup({ id: group.id, name: group.name || '' });
+    };
+
+    const handleUpdateGroup = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const res = await fetch(`/api/donate-groups/${editGroup.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(editGroup)
+        });
+        if (res.ok) {
+            setEditingGroupId(null);
             fetchData();
         }
     };
@@ -112,6 +176,170 @@ export default function DonateManager() {
         coffee: <Coffee size={20} />,
         paypal: <CreditCard size={20} />,
         international: <Globe size={20} />
+    };
+
+    const renderDynamicFields = (
+        state: typeof newDonate,
+        setState: React.Dispatch<React.SetStateAction<any>>
+    ) => {
+        switch (state.type) {
+            case 'bank':
+                return (
+                    <>
+                        <input
+                            placeholder="Bank Name (e.g. Vietcombank, Techcombank)"
+                            value={state.provider}
+                            onChange={(e) => setState({ ...state, provider: e.target.value })}
+                            required
+                            className="glass"
+                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                        />
+                        <input
+                            placeholder="Account Holder Name (e.g. NGUYEN VAN A)"
+                            value={state.accountName}
+                            onChange={(e) => setState({ ...state, accountName: e.target.value })}
+                            required
+                            className="glass"
+                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                        />
+                        <input
+                            placeholder="Account Number (STK)"
+                            value={state.accountNumber}
+                            onChange={(e) => setState({ ...state, accountNumber: e.target.value })}
+                            required
+                            className="glass"
+                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                        />
+                    </>
+                );
+            case 'wallet':
+                return (
+                    <>
+                        <input
+                            placeholder="Wallet Provider (e.g. MoMo, ZaloPay, Viettel Money)"
+                            value={state.provider}
+                            onChange={(e) => setState({ ...state, provider: e.target.value })}
+                            required
+                            className="glass"
+                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                        />
+                        <input
+                            placeholder="Account Name (Tên chủ ví)"
+                            value={state.accountName}
+                            onChange={(e) => setState({ ...state, accountName: e.target.value })}
+                            required
+                            className="glass"
+                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                        />
+                        <input
+                            placeholder="Phone Number / Wallet ID"
+                            value={state.accountNumber}
+                            onChange={(e) => setState({ ...state, accountNumber: e.target.value })}
+                            required
+                            className="glass"
+                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                        />
+                    </>
+                );
+            case 'crypto':
+                return (
+                    <>
+                        <input
+                            placeholder="Coin / Network (e.g. USDT - TRC20, BTC, ETH)"
+                            value={state.provider}
+                            onChange={(e) => setState({ ...state, provider: e.target.value })}
+                            required
+                            className="glass"
+                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                        />
+                        <input
+                            placeholder="Account / Wallet Label (Optional, e.g. Personal Wallet)"
+                            value={state.accountName}
+                            onChange={(e) => setState({ ...state, accountName: e.target.value })}
+                            className="glass"
+                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                        />
+                        <input
+                            placeholder="Wallet Address (Địa chỉ ví)"
+                            value={state.accountNumber}
+                            onChange={(e) => setState({ ...state, accountNumber: e.target.value })}
+                            required
+                            className="glass"
+                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                        />
+                    </>
+                );
+            case 'paypal':
+                return (
+                    <>
+                        <input
+                            placeholder="PayPal Display Name / Note (e.g. Personal PayPal)"
+                            value={state.accountName}
+                            onChange={(e) => setState({ ...state, accountName: e.target.value })}
+                            className="glass"
+                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                        />
+                        <input
+                            placeholder="PayPal Email or me Link (e.g. paypal.me/username)"
+                            value={state.accountNumber}
+                            onChange={(e) => setState({ ...state, accountNumber: e.target.value })}
+                            required
+                            className="glass"
+                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                        />
+                    </>
+                );
+            case 'coffee':
+                return (
+                    <>
+                        <input
+                            placeholder="Platform Name (e.g. Buy Me a Coffee, Ko-fi)"
+                            value={state.provider}
+                            onChange={(e) => setState({ ...state, provider: e.target.value })}
+                            className="glass"
+                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                        />
+                        <input
+                            placeholder="Profile URL / Username"
+                            value={state.accountNumber}
+                            onChange={(e) => setState({ ...state, accountNumber: e.target.value })}
+                            required
+                            className="glass"
+                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                        />
+                    </>
+                );
+            case 'international':
+            default:
+                return (
+                    <>
+                        <input
+                            placeholder="Service / Platform Name (e.g. Wise, Stripe, Patreon)"
+                            value={state.provider}
+                            onChange={(e) => setState({ ...state, provider: e.target.value })}
+                            required
+                            className="glass"
+                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                        />
+                        <input
+                            placeholder="Account Holder / Display Name"
+                            value={state.accountName}
+                            onChange={(e) => setState({ ...state, accountName: e.target.value })}
+                            required
+                            className="glass"
+                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                        />
+                        <input
+                            placeholder="Account Number / Link / Address"
+                            value={state.accountNumber}
+                            onChange={(e) => setState({ ...state, accountNumber: e.target.value })}
+                            required
+                            className="glass"
+                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                        />
+                    </>
+                );
+        }
     };
 
     return (
@@ -148,13 +376,33 @@ export default function DonateManager() {
                 }} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     {groups.map(group => (
                         <Reorder.Item key={group.id} value={group}>
-                            <Card hover={false} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                    <GripVertical size={20} style={{ color: 'var(--muted-foreground)', cursor: 'grab' }} />
-                                    <span style={{ fontWeight: 'bold' }}>{group.name}</span>
-                                </div>
-                                <Button onClick={() => handleDeleteGroup(group.id)} variant="ghost" size="sm" style={{ color: '#ef4444' }}><Trash2 size={16} /></Button>
-                            </Card>
+                            {editingGroupId === group.id ? (
+                                <Card hover={false} style={{ border: '2px solid var(--primary)', padding: '1rem' }}>
+                                    <form onSubmit={handleUpdateGroup} style={{ display: 'flex', gap: '1rem', width: '100%' }}>
+                                        <input
+                                            placeholder="Group Name"
+                                            value={editGroup.name}
+                                            onChange={(e) => setEditGroup({ ...editGroup, name: e.target.value })}
+                                            required
+                                            className="glass"
+                                            style={{ flex: 1, padding: '0.5rem 0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                                        />
+                                        <Button type="button" variant="outline" size="sm" onClick={() => setEditingGroupId(null)}>Cancel</Button>
+                                        <Button type="submit" size="sm"><Save size={16} /> Save</Button>
+                                    </form>
+                                </Card>
+                            ) : (
+                                <Card hover={false} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                        <GripVertical size={20} style={{ color: 'var(--muted-foreground)', cursor: 'grab' }} />
+                                        <span style={{ fontWeight: 'bold' }}>{group.name}</span>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                        <Button onClick={() => handleStartEditGroup(group)} variant="ghost" size="sm"><Edit2 size={16} /></Button>
+                                        <Button onClick={() => handleDeleteGroup(group.id)} variant="ghost" size="sm" style={{ color: '#ef4444' }}><Trash2 size={16} /></Button>
+                                    </div>
+                                </Card>
+                            )}
                         </Reorder.Item>
                     ))}
                 </Reorder.Group>
@@ -179,8 +427,8 @@ export default function DonateManager() {
                                 className="glass"
                                 style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'var(--background)' }}
                             >
-                                <option value="bank">Bank</option>
-                                <option value="wallet">E-Wallet (Momo, etc.)</option>
+                                <option value="bank">Bank Account</option>
+                                <option value="wallet">E-Wallet (Momo, ZaloPay...)</option>
                                 <option value="crypto">Blockchain / Crypto</option>
                                 <option value="paypal">PayPal</option>
                                 <option value="coffee">Buy Me a Coffee / Ko-fi</option>
@@ -197,30 +445,8 @@ export default function DonateManager() {
                                 {groups.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
                             </select>
 
-                            <input
-                                placeholder="Provider (e.g. Vietcombank)"
-                                value={newDonate.provider}
-                                onChange={(e) => setNewDonate({ ...newDonate, provider: e.target.value })}
-                                required
-                                className="glass"
-                                style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
-                            />
-                            <input
-                                placeholder="Account Name"
-                                value={newDonate.accountName}
-                                onChange={(e) => setNewDonate({ ...newDonate, accountName: e.target.value })}
-                                required
-                                className="glass"
-                                style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
-                            />
-                            <input
-                                placeholder="Account Number / Wallet Address"
-                                value={newDonate.accountNumber}
-                                onChange={(e) => setNewDonate({ ...newDonate, accountNumber: e.target.value })}
-                                required
-                                className="glass"
-                                style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
-                            />
+                            {renderDynamicFields(newDonate, setNewDonate)}
+
                             <Button type="submit" style={{ gridColumn: '1 / -1' }}>Save Method</Button>
                         </form>
                     </Card>
@@ -232,24 +458,63 @@ export default function DonateManager() {
                 }} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {donates.map((item) => (
                         <Reorder.Item key={item.id} value={item}>
-                            <Card hover={false} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                    <GripVertical size={20} style={{ color: 'var(--muted-foreground)', cursor: 'grab' }} />
-                                    <div style={{ color: 'var(--primary)' }}>{icons[item.type as keyof typeof icons]}</div>
-                                    <div>
-                                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                                            <p style={{ fontWeight: 'bold', margin: 0 }}>{item.provider} - {item.accountName}</p>
-                                            <span style={{ fontSize: '0.7rem', color: 'var(--primary)', fontWeight: 'bold', background: 'var(--secondary)', padding: '2px 6px', borderRadius: '4px' }}>
-                                                {groups.find(g => g.id === item.groupId)?.name || 'No Group'}
-                                            </span>
+                            {editingDonateId === item.id ? (
+                                <Card hover={false} style={{ border: '2px solid var(--primary)', padding: '1.5rem' }}>
+                                    <h4 style={{ marginBottom: '1rem' }}>Edit Donate Method</h4>
+                                    <form onSubmit={handleUpdateDonate} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+                                        <select
+                                            value={editDonate.type}
+                                            onChange={(e) => setEditDonate({ ...editDonate, type: e.target.value })}
+                                            className="glass"
+                                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'var(--background)' }}
+                                        >
+                                            <option value="bank">Bank Account</option>
+                                            <option value="wallet">E-Wallet (Momo, ZaloPay...)</option>
+                                            <option value="crypto">Blockchain / Crypto</option>
+                                            <option value="paypal">PayPal</option>
+                                            <option value="coffee">Buy Me a Coffee / Ko-fi</option>
+                                            <option value="international">Global / Other</option>
+                                        </select>
+
+                                        <select
+                                            value={editDonate.groupId}
+                                            onChange={(e) => setEditDonate({ ...editDonate, groupId: e.target.value })}
+                                            className="glass"
+                                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'var(--background)' }}
+                                        >
+                                            <option value="">No Group</option>
+                                            {groups.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
+                                        </select>
+
+                                        {renderDynamicFields(editDonate, setEditDonate)}
+
+                                        <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                                            <Button type="button" variant="outline" onClick={() => setEditingDonateId(null)}>Cancel</Button>
+                                            <Button type="submit"><Save size={16} /> Save Changes</Button>
                                         </div>
-                                        <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', margin: 0 }}>{item.accountNumber}</p>
+                                    </form>
+                                </Card>
+                            ) : (
+                                <Card hover={false} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                        <GripVertical size={20} style={{ color: 'var(--muted-foreground)', cursor: 'grab' }} />
+                                        <div style={{ color: 'var(--primary)' }}>{icons[item.type as keyof typeof icons]}</div>
+                                        <div>
+                                            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                                <p style={{ fontWeight: 'bold', margin: 0 }}>{item.provider} - {item.accountName}</p>
+                                                <span style={{ fontSize: '0.7rem', color: 'var(--primary)', fontWeight: 'bold', background: 'var(--secondary)', padding: '2px 6px', borderRadius: '4px' }}>
+                                                    {groups.find(g => g.id === item.groupId)?.name || 'No Group'}
+                                                </span>
+                                            </div>
+                                            <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', margin: 0 }}>{item.accountNumber}</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                    <Button onClick={() => handleDeleteDonate(item.id)} variant="ghost" size="sm" style={{ color: '#ef4444' }}><Trash2 size={16} /></Button>
-                                </div>
-                            </Card>
+                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                        <Button onClick={() => handleStartEditDonate(item)} variant="ghost" size="sm"><Edit2 size={16} /></Button>
+                                        <Button onClick={() => handleDeleteDonate(item.id)} variant="ghost" size="sm" style={{ color: '#ef4444' }}><Trash2 size={16} /></Button>
+                                    </div>
+                                </Card>
+                            )}
                         </Reorder.Item>
                     ))}
                 </Reorder.Group>
