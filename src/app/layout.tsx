@@ -13,23 +13,31 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Alikuxac | Profile Card",
-  description: "Explore the links, projects, and donation channels of Alikuxac - Fullstack Developer.",
-  keywords: ["Alikuxac", "Fullstack Developer", "Portfolio", "Links", "Donate"],
+  metadataBase: new URL("https://alikuxac.xyz"),
+  title: "Alikuxac - Backend Engineer",
+  description: "Creative Fullstack & Backend Engineer building high-performance web applications and services on the Edge.",
+  keywords: ["Alikuxac", "Backend Engineer", "Fullstack Developer", "Portfolio", "Links", "Donate"],
   openGraph: {
-    title: "Alikuxac | Profile Card",
-    description: "Fullstack Developer & Creative Creator",
+    title: "Alikuxac - Backend Engineer",
+    description: "Creative Fullstack & Backend Engineer building high-performance web applications and services on the Edge.",
     url: "https://alikuxac.xyz",
     siteName: "Alikuxac Portfolio",
     images: [
       {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
+        url: "/pic.png",
+        width: 400,
+        height: 400,
+        alt: "Alikuxac Profile Picture",
       },
     ],
     locale: "vi_VN",
     type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Alikuxac - Backend Engineer",
+    description: "Creative Fullstack & Backend Engineer building high-performance web applications and services on the Edge.",
+    images: ["/pic.png"],
   },
 };
 
