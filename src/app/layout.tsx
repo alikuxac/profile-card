@@ -17,6 +17,10 @@ export const metadata: Metadata = {
   title: "Alikuxac - Backend Engineer",
   description: "Creative Fullstack & Backend Engineer building high-performance web applications and services on the Edge.",
   keywords: ["Alikuxac", "Backend Engineer", "Fullstack Developer", "Portfolio", "Links", "Donate"],
+  icons: {
+    icon: "/pic.png",
+    apple: "/pic.png",
+  },
   openGraph: {
     title: "Alikuxac - Backend Engineer",
     description: "Creative Fullstack & Backend Engineer building high-performance web applications and services on the Edge.",

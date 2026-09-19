@@ -15,7 +15,7 @@ export default function ProjectCard({ project }: { project: any }) {
                 position: 'relative'
             }}>
                 <Image
-                    src={project.coverImage || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800'}
+                    src={project.coverImage || '/cover.svg'}
                     alt={project.title}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
