@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import * as LucideIcons from 'lucide-react';
 import React from 'react';
 
-const ICON_MAP: Record<string, keyof typeof LucideIcons> = {
+const ICON_MAP: Record<string, string> = {
     facebook: 'Facebook',
     twitter: 'Twitter',
     x: 'Twitter',

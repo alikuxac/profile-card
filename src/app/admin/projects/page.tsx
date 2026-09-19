@@ -11,8 +11,13 @@ export default function ProjectManager() {
     const [groups, setGroups] = useState<any[]>([]);
     const [isAdding, setIsAdding] = useState(false);
     const [isAddingGroup, setIsAddingGroup] = useState(false);
+    const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
+    const [editingGroupId, setEditingGroupId] = useState<string | null>(null);
+
     const [newProject, setNewProject] = useState({ title: '', description: '', url: '', githubUrl: '', coverImage: '', groupId: '', slug: '' });
+    const [editProject, setEditProject] = useState({ id: '', title: '', description: '', url: '', githubUrl: '', coverImage: '', groupId: '', slug: '' });
     const [newGroup, setNewGroup] = useState({ name: '' });
+    const [editGroup, setEditGroup] = useState({ id: '', name: '' });
 
     const projectTimerRef = useRef<NodeJS.Timeout | null>(null);
     const groupTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -79,6 +84,33 @@ export default function ProjectManager() {
         }
     };
 
+    const handleStartEditProject = (project: any) => {
+        setEditingProjectId(project.id);
+        setEditProject({
+            id: project.id,
+            title: project.title || '',
+            description: project.description || '',
+            url: project.url || '',
+            githubUrl: project.githubUrl || '',
+            coverImage: project.coverImage || '',
+            groupId: project.groupId || '',
+            slug: project.slug || ''
+        });
+    };
+
+    const handleUpdateProject = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const res = await fetch(`/api/projects/${editProject.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(editProject)
+        });
+        if (res.ok) {
+            setEditingProjectId(null);
+            fetchData();
+        }
+    };
+
     const handleAddGroup = async (e: React.FormEvent) => {
         e.preventDefault();
         const res = await fetch('/api/project-groups', {
@@ -93,7 +125,24 @@ export default function ProjectManager() {
         }
     };
 
-    // Note: Delete APIs for dynamic routes might need implementation if not exists
+    const handleStartEditGroup = (group: any) => {
+        setEditingGroupId(group.id);
+        setEditGroup({ id: group.id, name: group.name || '' });
+    };
+
+    const handleUpdateGroup = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const res = await fetch(`/api/project-groups/${editGroup.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(editGroup)
+        });
+        if (res.ok) {
+            setEditingGroupId(null);
+            fetchData();
+        }
+    };
+
     const handleDeleteProject = async (id: string) => {
         if (!confirm('Are you sure?')) return;
         await fetch(`/api/projects/${id}`, { method: 'DELETE' });
@@ -140,13 +189,33 @@ export default function ProjectManager() {
                 }} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     {groups.map(group => (
                         <Reorder.Item key={group.id} value={group}>
-                            <Card hover={false} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                    <GripVertical size={20} style={{ color: 'var(--muted-foreground)', cursor: 'grab' }} />
-                                    <span style={{ fontWeight: 'bold' }}>{group.name}</span>
-                                </div>
-                                <Button onClick={() => handleDeleteGroup(group.id)} variant="ghost" size="sm" style={{ color: '#ef4444' }}><Trash2 size={16} /></Button>
-                            </Card>
+                            {editingGroupId === group.id ? (
+                                <Card hover={false} style={{ border: '2px solid var(--primary)', padding: '1rem' }}>
+                                    <form onSubmit={handleUpdateGroup} style={{ display: 'flex', gap: '1rem', width: '100%' }}>
+                                        <input
+                                            placeholder="Group Name"
+                                            value={editGroup.name}
+                                            onChange={(e) => setEditGroup({ ...editGroup, name: e.target.value })}
+                                            required
+                                            className="glass"
+                                            style={{ flex: 1, padding: '0.5rem 0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                                        />
+                                        <Button type="button" variant="outline" size="sm" onClick={() => setEditingGroupId(null)}>Cancel</Button>
+                                        <Button type="submit" size="sm"><Save size={16} /> Save</Button>
+                                    </form>
+                                </Card>
+                            ) : (
+                                <Card hover={false} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                        <GripVertical size={20} style={{ color: 'var(--muted-foreground)', cursor: 'grab' }} />
+                                        <span style={{ fontWeight: 'bold' }}>{group.name}</span>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                        <Button onClick={() => handleStartEditGroup(group)} variant="ghost" size="sm"><Edit2 size={16} /></Button>
+                                        <Button onClick={() => handleDeleteGroup(group.id)} variant="ghost" size="sm" style={{ color: '#ef4444' }}><Trash2 size={16} /></Button>
+                                    </div>
+                                </Card>
+                            )}
                         </Reorder.Item>
                     ))}
                 </Reorder.Group>
@@ -230,25 +299,94 @@ export default function ProjectManager() {
                 }} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                     {projects.map((project) => (
                         <Reorder.Item key={project.id} value={project}>
-                            <Card hover={false} style={{ display: 'flex', flexDirection: 'column', padding: '1.5rem' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                        <GripVertical size={20} style={{ color: 'var(--muted-foreground)', cursor: 'grab' }} />
-                                        <div>
-                                            <h4 style={{ margin: 0 }}>{project.title}</h4>
-                                            <span style={{ fontSize: '0.7rem', color: 'var(--primary)', fontWeight: 'bold' }}>
-                                                {groups.find(g => g.id === project.groupId)?.name || 'No Group'}
-                                            </span>
+                            {editingProjectId === project.id ? (
+                                <Card hover={false} style={{ border: '2px solid var(--primary)', padding: '1.5rem' }}>
+                                    <h4 style={{ marginBottom: '1rem' }}>Edit Project</h4>
+                                    <form onSubmit={handleUpdateProject} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem' }}>
+                                        <input
+                                            placeholder="Project Title"
+                                            value={editProject.title}
+                                            onChange={(e) => setEditProject({ ...editProject, title: e.target.value })}
+                                            required
+                                            className="glass"
+                                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                                        />
+                                        <input
+                                            placeholder="Custom Slug (optional)"
+                                            value={editProject.slug}
+                                            onChange={(e) => setEditProject({ ...editProject, slug: e.target.value })}
+                                            className="glass"
+                                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                                        />
+
+                                        <select
+                                            value={editProject.groupId}
+                                            onChange={(e) => setEditProject({ ...editProject, groupId: e.target.value })}
+                                            className="glass"
+                                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'var(--background)' }}
+                                        >
+                                            <option value="">No Group</option>
+                                            {groups.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
+                                        </select>
+
+                                        <input
+                                            placeholder="Cover Image URL"
+                                            value={editProject.coverImage}
+                                            onChange={(e) => setEditProject({ ...editProject, coverImage: e.target.value })}
+                                            className="glass"
+                                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                                        />
+                                        <textarea
+                                            placeholder="Project Description"
+                                            value={editProject.description}
+                                            onChange={(e) => setEditProject({ ...editProject, description: e.target.value })}
+                                            className="glass"
+                                            style={{ gridColumn: '1 / -1', padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent', minHeight: '80px' }}
+                                        />
+                                        <input
+                                            placeholder="Live Demo URL"
+                                            value={editProject.url}
+                                            onChange={(e) => setEditProject({ ...editProject, url: e.target.value })}
+                                            className="glass"
+                                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                                        />
+                                        <input
+                                            placeholder="GitHub URL"
+                                            value={editProject.githubUrl}
+                                            onChange={(e) => setEditProject({ ...editProject, githubUrl: e.target.value })}
+                                            className="glass"
+                                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                                        />
+                                        <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                                            <Button type="button" variant="outline" onClick={() => setEditingProjectId(null)}>Cancel</Button>
+                                            <Button type="submit"><Save size={16} /> Save Changes</Button>
+                                        </div>
+                                    </form>
+                                </Card>
+                            ) : (
+                                <Card hover={false} style={{ display: 'flex', flexDirection: 'column', padding: '1.5rem' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                            <GripVertical size={20} style={{ color: 'var(--muted-foreground)', cursor: 'grab' }} />
+                                            <div>
+                                                <h4 style={{ margin: 0 }}>{project.title}</h4>
+                                                <span style={{ fontSize: '0.7rem', color: 'var(--primary)', fontWeight: 'bold' }}>
+                                                    {groups.find(g => g.id === project.groupId)?.name || 'No Group'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                            <Button onClick={() => handleStartEditProject(project)} variant="ghost" size="sm"><Edit2 size={16} /></Button>
+                                            <Button onClick={() => handleDeleteProject(project.id)} variant="ghost" size="sm" style={{ color: '#ef4444' }}><Trash2 size={16} /></Button>
                                         </div>
                                     </div>
-                                    <Button onClick={() => handleDeleteProject(project.id)} variant="ghost" size="sm" style={{ color: '#ef4444' }}><Trash2 size={16} /></Button>
-                                </div>
-                                <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem', marginLeft: '2.25rem' }}>{project.description}</p>
-                                <div style={{ display: 'flex', gap: '1rem', marginLeft: '2.25rem' }}>
-                                    {project.url && <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8rem' }}><Globe size={14} color="var(--primary)" /> Demo</div>}
-                                    {project.githubUrl && <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8rem' }}><GitCommit size={14} /> Repository</div>}
-                                </div>
-                            </Card>
+                                    <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem', marginLeft: '2.25rem' }}>{project.description}</p>
+                                    <div style={{ display: 'flex', gap: '1rem', marginLeft: '2.25rem' }}>
+                                        {project.url && <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8rem' }}><Globe size={14} color="var(--primary)" /> Demo</div>}
+                                        {project.githubUrl && <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8rem' }}><GitCommit size={14} /> Repository</div>}
+                                    </div>
+                                </Card>
+                            )}
                         </Reorder.Item>
                     ))}
                 </Reorder.Group>

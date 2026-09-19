@@ -19,3 +19,19 @@ export async function onRequestDelete(context: any) {
         return Response.json({ error: e.message }, { status: 500 });
     }
 }
+
+export async function onRequestPatch(context: any) {
+    try {
+        const id = context.params.id;
+        const body = await context.request.json();
+        const db = drizzle(context.env.profile_card_db, { schema });
+
+        const result = await db.update(schema.projectGroups).set({
+            name: body.name
+        }).where(eq(schema.projectGroups.id, id)).returning();
+
+        return Response.json(result[0]);
+    } catch (e: any) {
+        return Response.json({ error: e.message }, { status: 500 });
+    }
+}

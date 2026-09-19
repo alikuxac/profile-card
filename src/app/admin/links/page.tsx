@@ -17,9 +17,13 @@ export default function LinkManager() {
     const [groups, setGroups] = useState<any[]>([]);
     const [isAddingLink, setIsAddingLink] = useState(false);
     const [isAddingGroup, setIsAddingGroup] = useState(false);
+    const [editingLinkId, setEditingLinkId] = useState<string | null>(null);
+    const [editingGroupId, setEditingGroupId] = useState<string | null>(null);
 
     const [newLink, setNewLink] = useState({ title: '', url: '', icon: '', color: '', groupId: '', slug: '' });
+    const [editLink, setEditLink] = useState({ id: '', title: '', url: '', icon: '', color: '', groupId: '', slug: '' });
     const [newGroup, setNewGroup] = useState({ name: '' });
+    const [editGroup, setEditGroup] = useState({ id: '', name: '' });
 
     const linksTimerRef = useRef<NodeJS.Timeout | null>(null);
     const groupsTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -86,6 +90,32 @@ export default function LinkManager() {
         }
     };
 
+    const handleStartEditLink = (link: any) => {
+        setEditingLinkId(link.id);
+        setEditLink({
+            id: link.id,
+            title: link.title || '',
+            url: link.url || '',
+            icon: link.icon || '',
+            color: link.color || '',
+            groupId: link.groupId || '',
+            slug: link.slug || ''
+        });
+    };
+
+    const handleUpdateLink = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const res = await fetch(`/api/links/${editLink.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(editLink)
+        });
+        if (res.ok) {
+            setEditingLinkId(null);
+            fetchData();
+        }
+    };
+
     const handleAddGroup = async (e: React.FormEvent) => {
         e.preventDefault();
         const res = await fetch('/api/link-groups', {
@@ -96,6 +126,24 @@ export default function LinkManager() {
         if (res.ok) {
             setIsAddingGroup(false);
             setNewGroup({ name: '' });
+            fetchData();
+        }
+    };
+
+    const handleStartEditGroup = (group: any) => {
+        setEditingGroupId(group.id);
+        setEditGroup({ id: group.id, name: group.name || '' });
+    };
+
+    const handleUpdateGroup = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const res = await fetch(`/api/link-groups/${editGroup.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(editGroup)
+        });
+        if (res.ok) {
+            setEditingGroupId(null);
             fetchData();
         }
     };
@@ -147,13 +195,33 @@ export default function LinkManager() {
                 }} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     {groups.map(group => (
                         <Reorder.Item key={group.id} value={group}>
-                            <Card hover={false} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                    <GripVertical size={20} style={{ color: 'var(--muted-foreground)', cursor: 'grab' }} />
-                                    <span style={{ fontWeight: 'bold' }}>{group.name}</span>
-                                </div>
-                                <Button onClick={() => handleDeleteGroup(group.id)} variant="ghost" size="sm" style={{ color: '#ef4444' }}><Trash2 size={16} /></Button>
-                            </Card>
+                            {editingGroupId === group.id ? (
+                                <Card hover={false} style={{ border: '2px solid var(--primary)', padding: '1rem' }}>
+                                    <form onSubmit={handleUpdateGroup} style={{ display: 'flex', gap: '1rem', width: '100%' }}>
+                                        <input
+                                            placeholder="Group Name"
+                                            value={editGroup.name}
+                                            onChange={(e) => setEditGroup({ ...editGroup, name: e.target.value })}
+                                            required
+                                            className="glass"
+                                            style={{ flex: 1, padding: '0.5rem 0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                                        />
+                                        <Button type="button" variant="outline" size="sm" onClick={() => setEditingGroupId(null)}>Cancel</Button>
+                                        <Button type="submit" size="sm"><Save size={16} /> Save</Button>
+                                    </form>
+                                </Card>
+                            ) : (
+                                <Card hover={false} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                        <GripVertical size={20} style={{ color: 'var(--muted-foreground)', cursor: 'grab' }} />
+                                        <span style={{ fontWeight: 'bold' }}>{group.name}</span>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                        <Button onClick={() => handleStartEditGroup(group)} variant="ghost" size="sm"><Edit2 size={16} /></Button>
+                                        <Button onClick={() => handleDeleteGroup(group.id)} variant="ghost" size="sm" style={{ color: '#ef4444' }}><Trash2 size={16} /></Button>
+                                    </div>
+                                </Card>
+                            )}
                         </Reorder.Item>
                     ))}
                 </Reorder.Group>
@@ -235,35 +303,100 @@ export default function LinkManager() {
                 }} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {links.map((link) => (
                         <Reorder.Item key={link.id} value={link}>
-                            <Card hover={false} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                    <GripVertical size={20} style={{ color: 'var(--muted-foreground)', cursor: 'grab' }} />
-                                    <div style={{
-                                        width: '32px',
-                                        height: '32px',
-                                        borderRadius: '8px',
-                                        background: link.color || 'var(--secondary)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        color: link.color ? 'white' : 'var(--primary)'
-                                    }}>
-                                        <ExternalLink size={16} />
-                                    </div>
-                                    <div>
-                                        <p style={{ fontWeight: 'bold', marginBottom: '0.25rem' }}>{link.title}</p>
-                                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                                            <span style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: '10px', background: 'var(--secondary)', color: 'var(--primary)' }}>
-                                                {groups.find(g => g.id === link.groupId)?.name || 'No Group'}
-                                            </span>
-                                            <p style={{ fontSize: '0.8rem', color: 'var(--muted-foreground)' }}>{link.url}</p>
+                            {editingLinkId === link.id ? (
+                                <Card hover={false} style={{ border: '2px solid var(--primary)', padding: '1.5rem' }}>
+                                    <h4 style={{ marginBottom: '1rem' }}>Edit Link</h4>
+                                    <form onSubmit={handleUpdateLink} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+                                        <input
+                                            placeholder="Title"
+                                            value={editLink.title}
+                                            onChange={(e) => setEditLink({ ...editLink, title: e.target.value })}
+                                            required
+                                            className="glass"
+                                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                                        />
+                                        <input
+                                            placeholder="URL"
+                                            value={editLink.url}
+                                            onChange={(e) => setEditLink({ ...editLink, url: e.target.value })}
+                                            required
+                                            className="glass"
+                                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                                        />
+                                        <input
+                                            placeholder="Custom Slug (optional)"
+                                            value={editLink.slug}
+                                            onChange={(e) => setEditLink({ ...editLink, slug: e.target.value })}
+                                            className="glass"
+                                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                                        />
+
+                                        <select
+                                            value={editLink.groupId}
+                                            onChange={(e) => setEditLink({ ...editLink, groupId: e.target.value })}
+                                            className="glass"
+                                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'var(--background)' }}
+                                        >
+                                            <option value="">No Group (Others)</option>
+                                            {groups.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
+                                        </select>
+
+                                        <select
+                                            value={editLink.icon}
+                                            onChange={(e) => setEditLink({ ...editLink, icon: e.target.value })}
+                                            className="glass"
+                                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'var(--background)' }}
+                                        >
+                                            <option value="">Select Icon (Optional)</option>
+                                            {FAMOUS_ICONS.map(icon => <option key={icon} value={icon}>{icon}</option>)}
+                                        </select>
+
+                                        <input
+                                            placeholder="HEX Color (e.g. #1877F2)"
+                                            value={editLink.color}
+                                            onChange={(e) => setEditLink({ ...editLink, color: e.target.value })}
+                                            className="glass"
+                                            style={{ padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', background: 'transparent' }}
+                                        />
+
+                                        <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                                            <Button type="button" variant="outline" onClick={() => setEditingLinkId(null)}>Cancel</Button>
+                                            <Button type="submit"><Save size={16} /> Save Changes</Button>
+                                        </div>
+                                    </form>
+                                </Card>
+                            ) : (
+                                <Card hover={false} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                        <GripVertical size={20} style={{ color: 'var(--muted-foreground)', cursor: 'grab' }} />
+                                        <div style={{
+                                            width: '32px',
+                                            height: '32px',
+                                            borderRadius: '8px',
+                                            background: link.color || 'var(--secondary)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            color: link.color ? 'white' : 'var(--primary)'
+                                        }}>
+                                            <ExternalLink size={16} />
+                                        </div>
+                                        <div>
+                                            <p style={{ fontWeight: 'bold', marginBottom: '0.25rem' }}>{link.title}</p>
+                                            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                                <span style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: '10px', background: 'var(--secondary)', color: 'var(--primary)' }}>
+                                                    {groups.find(g => g.id === link.groupId)?.name || 'No Group'}
+                                                </span>
+                                                <p style={{ fontSize: '0.8rem', color: 'var(--muted-foreground)' }}>{link.url}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                    <Button variant="ghost" size="sm" onClick={() => handleDeleteLink(link.id)} style={{ color: '#ef4444' }}><Trash2 size={16} /></Button>
-                                </div>
-                            </Card>
+                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                        <Button variant="ghost" size="sm" onClick={() => handleStartEditLink(link)}><Edit2 size={16} /></Button>
+                                        <Button variant="ghost" size="sm" onClick={() => handleDeleteLink(link.id)} style={{ color: '#ef4444' }}><Trash2 size={16} /></Button>
+                                    </div>
+                                </Card>
+                            )}
                         </Reorder.Item>
                     ))}
                 </Reorder.Group>
