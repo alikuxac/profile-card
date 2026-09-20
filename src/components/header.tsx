@@ -21,6 +21,7 @@ export default function Header() {
 
                 <nav style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
                     <Link href="/links" style={{ fontWeight: '600' }}>Links</Link>
+                    <Link href="/cv" style={{ fontWeight: '600' }}>CV</Link>
                     <Link href="/donate" style={{ fontWeight: '600' }}>Donate</Link>
                     <Link href="/projects" style={{ fontWeight: '600' }}>Projects</Link>
                     <ThemeToggle />
