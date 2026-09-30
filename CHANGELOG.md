@@ -2,7 +2,14 @@
 
 All notable changes to this project are documented in this file based on Git releases.
 
-## [1.7.0] - Unreleased
+## [1.7.1] - 2026-09-30
+
+### Fixed
+- **Admin Dashboard Overview Stats**: Added missing `x-admin-secret` authentication header when fetching `/api/stats` to fix `401 Unauthorized` response on dashboard metrics overview.
+
+---
+
+## [1.7.0] - 2026-09-30
 
 ### Added
 - **GitHub Edge API Proxy (`functions/api/repo-stats/[repo].ts`)**:

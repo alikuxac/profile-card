@@ -16,8 +16,11 @@ export default function AdminDashboard() {
     useEffect(() => {
         const fetchStats = async () => {
             try {
+                const adminSecret = localStorage.getItem('adminSecret') || '';
                 const [statsRes, viewsRes] = await Promise.all([
-                    fetch('/api/stats'),
+                    fetch('/api/stats', {
+                        headers: { 'x-admin-secret': adminSecret }
+                    }),
                     fetch('/api/views')
                 ]);
 
