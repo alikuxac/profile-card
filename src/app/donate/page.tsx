@@ -166,9 +166,9 @@ export default function DonatePage() {
 
     return (
         <div style={{ maxWidth: '800px', margin: '0 auto', paddingBottom: '3rem' }}>
-            <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-                <h1 style={{ textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>Support Me</h1>
-                <p style={{ color: 'var(--muted-foreground)', fontWeight: '600', textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>Your support is greatly appreciated!</p>
+            <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+                <h1>Support Me</h1>
+                <p style={{ color: 'var(--muted-foreground)', fontWeight: '500', marginTop: '0.5rem' }}>Your support is greatly appreciated!</p>
             </div>
 
             {loading ? (

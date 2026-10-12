@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: 'Links - Alikuxac',
-    description: 'Find all my social media links and connectivity platforms.',
+    description: 'Direct links to profiles, channels, and projects by Alikuxac.',
     openGraph: {
         title: 'Links - Alikuxac',
-        description: 'Find all my social media links and connectivity platforms.',
+        description: 'Direct links to profiles, channels, and projects by Alikuxac.',
         url: 'https://alikuxac.xyz/links',
         type: 'website',
         images: [
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     twitter: {
         card: 'summary',
         title: 'Links - Alikuxac',
-        description: 'Find all my social media links and connectivity platforms.',
+        description: 'Direct links to profiles, channels, and projects by Alikuxac.',
         images: ['/pic.png'],
     }
 };

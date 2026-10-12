@@ -66,7 +66,7 @@ export default function Home() {
           Alikuxac<span style={{ color: 'var(--primary)' }}>.</span>
         </h1>
         <p style={{ fontSize: '1.25rem', color: 'var(--muted-foreground)', fontWeight: '500', marginBottom: '2rem', lineHeight: '1.4' }}>
-          Creative Fullstack Developer building high-performance <br /> experiences on the Edge.
+          Backend engineer building web APIs, real-time services, <br /> and systems on Cloudflare Edge.
         </p>
 
         <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '0.5rem' }}>

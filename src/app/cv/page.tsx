@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default function CvPage() {
-  const { header, skills, experiences, projects, education } = cvData;
+  const { header, summary, skills, experiences, projects, education } = cvData;
 
   return (
     <div style={{ padding: "2rem 1rem", display: "flex", justifyContent: "center" }}>
@@ -176,6 +176,14 @@ export default function CvPage() {
             Phone: {header.phone}
           </div>
         </header>
+
+        {/* Summary */}
+        {summary && (
+          <section>
+            <h2 className="cv-section-title">Professional Summary</h2>
+            <p style={{ margin: "0.25rem 0", textAlign: "justify" }}>{summary}</p>
+          </section>
+        )}
 
         {/* Technical Skills */}
         <section>

@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://alikuxac.xyz"),
   title: "Alikuxac - Backend Engineer",
-  description: "Creative Fullstack & Backend Engineer building high-performance web applications and services on the Edge.",
+  description: "Backend engineer portfolio building APIs, real-time apps, and edge infrastructure.",
   keywords: ["Alikuxac", "Backend Engineer", "Fullstack Developer", "Portfolio", "Links", "Donate"],
   icons: {
     icon: "/pic.png",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Alikuxac - Backend Engineer",
-    description: "Creative Fullstack & Backend Engineer building high-performance web applications and services on the Edge.",
+    description: "Backend engineer portfolio building APIs, real-time apps, and edge infrastructure.",
     url: "https://alikuxac.xyz",
     siteName: "Alikuxac Portfolio",
     images: [
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "Alikuxac - Backend Engineer",
-    description: "Creative Fullstack & Backend Engineer building high-performance web applications and services on the Edge.",
+    description: "Backend engineer portfolio building APIs, real-time apps, and edge infrastructure.",
     images: ["/pic.png"],
   },
 };
@@ -58,6 +58,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Preload hero background image to eliminate LCP delay */}
+        <link rel="preload" as="image" href="/bg.jpg" fetchPriority="high" />
+        {/* Preconnect to external API/CDN domains to reduce network roundtrips */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://img.vietqr.io" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://img.vietqr.io" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Background />
         <GoogleAnalytics ga_id="G-5V4SRB0GEQ" />

@@ -54,7 +54,7 @@ export default function LinksPage() {
                     />
                 </div>
                 <h1 style={{ fontSize: '2.25rem', fontWeight: '900', marginBottom: '0.5rem' }}>Alikuxac<span style={{ color: 'var(--primary)' }}>.</span></h1>
-                <p style={{ color: 'var(--muted-foreground)', fontWeight: '500' }}>Find me on other platforms & connectivity</p>
+                <p style={{ color: 'var(--muted-foreground)', fontWeight: '500' }}>Profiles, repositories, and contact channels.</p>
             </div>
 
             {loading ? (

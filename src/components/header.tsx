@@ -15,7 +15,7 @@ export default function Header() {
             marginBottom: '1rem',
         }} className="glass">
             <div style={{ padding: '0 2rem', width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Link href="/" style={{ fontSize: '1.5rem', fontWeight: '800', textShadow: '0 2px 4px rgba(0,0,0,0.1)', color: 'var(--primary)' }}>
+                <Link href="/" style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--primary)' }}>
                     Alikuxac<span style={{ color: 'var(--foreground)' }}>.xyz</span>
                 </Link>
 

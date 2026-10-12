@@ -2,24 +2,29 @@
 
 import { useEffect, useState } from 'react';
 
+interface ViewsResponse {
+    totalViews?: number;
+}
+
 export default function Footer() {
     const [views, setViews] = useState<number | null>(null);
 
     useEffect(() => {
-        // Track this view
-        fetch('/api/views', { method: 'POST' }).catch(() => { });
+        // Defer non-critical analytics/views fetching to avoid blocking FCP/LCP
+        const timer = setTimeout(() => {
+            fetch('/api/views', { method: 'POST' }).catch(() => { });
 
-        // Fetch total views
-        const fetchViews = async () => {
-            try {
-                const res = await fetch('/api/views');
-                if (res.ok) {
-                    const data = await res.json() as any;
-                    setViews(data.totalViews);
-                }
-            } catch (e) { }
-        };
-        fetchViews();
+            fetch('/api/views')
+                .then(res => res.ok ? (res.json() as Promise<ViewsResponse>) : null)
+                .then(data => {
+                    if (data && typeof data.totalViews === 'number') {
+                        setViews(data.totalViews);
+                    }
+                })
+                .catch(() => { });
+        }, 1500);
+
+        return () => clearTimeout(timer);
     }, []);
 
     return (

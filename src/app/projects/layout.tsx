@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: 'Projects - Alikuxac',
-    description: 'Explore my portfolio projects, open source contributions, and web development works.',
+    description: 'Selected projects, open-source work, and system architecture by Alikuxac.',
     openGraph: {
         title: 'Projects - Alikuxac',
-        description: 'Explore my portfolio projects, open source contributions, and web development works.',
+        description: 'Selected projects, open-source work, and system architecture by Alikuxac.',
         url: 'https://alikuxac.xyz/projects',
         type: 'website',
         images: [
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     twitter: {
         card: 'summary',
         title: 'Projects - Alikuxac',
-        description: 'Explore my portfolio projects, open source contributions, and web development works.',
+        description: 'Selected projects, open-source work, and system architecture by Alikuxac.',
         images: ['/pic.png'],
     }
 };
