@@ -108,7 +108,7 @@ export default function Home() {
             <div className="hero-avatar-ring">
               <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '50%', overflow: 'hidden' }}>
                 <Image
-                  src="/pic.png"
+                  src="https://cdn.alikuxac.xyz/profile/pic.png"
                   alt="Alikuxac profile avatar"
                   fill
                   priority
@@ -247,9 +247,9 @@ export default function Home() {
                     {card.role}
                   </span>
                 </div>
-                <h3 style={{ fontSize: '1.15rem', marginBottom: '0.5rem', fontWeight: 700 }}>
+                <h2 style={{ fontSize: '1.15rem', marginBottom: '0.5rem', fontWeight: 700 }}>
                   {card.title}
-                </h3>
+                </h2>
                 <p style={{ fontSize: '0.925rem', color: 'var(--muted-foreground)', lineHeight: 1.5 }}>
                   {card.desc}
                 </p>
@@ -286,7 +286,7 @@ export default function Home() {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.75rem' }}>
-                  <div
+                  <h2
                     style={{
                       padding: '6px 16px',
                       borderRadius: '50px',
@@ -294,11 +294,13 @@ export default function Home() {
                       color: 'var(--primary)',
                       fontWeight: 800,
                       letterSpacing: '0.08em',
-                      fontSize: '0.78rem'
+                      fontSize: '0.78rem',
+                      margin: 0,
+                      display: 'inline-block'
                     }}
                   >
                     TECHNICAL SPECTRUM
-                  </div>
+                  </h2>
                   <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to right, var(--primary), transparent)', opacity: 0.25 }} />
                 </div>
 
@@ -311,7 +313,7 @@ export default function Home() {
                 >
                   {skillGroups.map((group, idx) => (
                     <div key={idx}>
-                      <h4
+                      <h3
                         style={{
                           fontSize: '0.95rem',
                           marginBottom: '0.85rem',
@@ -323,7 +325,7 @@ export default function Home() {
                         }}
                       >
                         <Target size={16} /> {group.category}
-                      </h4>
+                      </h3>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
                         {group.items.map((skill, sIdx) => (
                           <span

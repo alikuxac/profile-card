@@ -10,7 +10,7 @@ export const metadata: Metadata = {
         type: 'website',
         images: [
             {
-                url: '/pic.png',
+                url: 'https://cdn.alikuxac.xyz/profile/pic.png',
                 width: 400,
                 height: 400,
                 alt: 'Alikuxac Profile Picture',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
         card: 'summary',
         title: 'Projects - Alikuxac',
         description: 'Selected projects, open-source work, and system architecture by Alikuxac.',
-        images: ['/pic.png'],
+        images: ['https://cdn.alikuxac.xyz/profile/pic.png'],
     }
 };
 

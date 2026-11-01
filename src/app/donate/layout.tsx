@@ -10,7 +10,7 @@ export const metadata: Metadata = {
         type: 'website',
         images: [
             {
-                url: '/pic.png',
+                url: 'https://cdn.alikuxac.xyz/profile/pic.png',
                 width: 400,
                 height: 400,
                 alt: 'Alikuxac Profile Picture',
@@ -21,10 +21,15 @@ export const metadata: Metadata = {
         card: 'summary',
         title: 'Donate - Alikuxac',
         description: 'Support development and infrastructure costs via bank transfer, MoMo, or crypto.',
-        images: ['/pic.png'],
+        images: ['https://cdn.alikuxac.xyz/profile/pic.png'],
     }
 };
 
 export default function DonateLayout({ children }: { children: React.ReactNode }) {
-    return <>{children}</>;
+    return (
+        <>
+            <link rel="preconnect" href="https://img.vietqr.io" crossOrigin="anonymous" />
+            {children}
+        </>
+    );
 }

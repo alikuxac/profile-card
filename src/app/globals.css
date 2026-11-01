@@ -9,7 +9,7 @@
   --secondary-foreground: #0f172a;
 
   --muted: #f1f5f9;
-  --muted-foreground: #64748b;
+  --muted-foreground: #475569;
 
   --accent: #f8fafc;
   --accent-foreground: #0f172a;
@@ -561,4 +561,13 @@ a {
     margin-top: 0 !important;
     width: auto !important;
   }
+}
+
+.footer-visitor-count {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+[data-theme='dark'] .footer-visitor-count {
+  color: #a5b4fc;
 }

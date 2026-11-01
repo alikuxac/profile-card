@@ -48,7 +48,7 @@ export default function ProjectsPage() {
 
                         return (
                             <section key={group.id}>
-                                <h3 style={{ marginBottom: '1.5rem', color: 'var(--primary)' }}>{group.name}</h3>
+                                <h2 style={{ marginBottom: '1.5rem', color: 'var(--primary)' }}>{group.name}</h2>
                                 <div style={{
                                     display: 'grid',
                                     gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
@@ -64,7 +64,7 @@ export default function ProjectsPage() {
 
                     {others.length > 0 && (
                         <section>
-                            {groups.length > 0 && <h3 style={{ marginBottom: '1.5rem', color: 'var(--primary)' }}>Others</h3>}
+                            {groups.length > 0 && <h2 style={{ marginBottom: '1.5rem', color: 'var(--primary)' }}>Others</h2>}
                             <div style={{
                                 display: 'grid',
                                 gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',

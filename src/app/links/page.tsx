@@ -46,7 +46,7 @@ export default function LinksPage() {
                     overflow: 'hidden'
                 }}>
                     <Image
-                        src="/pic.png"
+                        src="https://cdn.alikuxac.xyz/profile/pic.png"
                         alt="Profile"
                         fill
                         priority

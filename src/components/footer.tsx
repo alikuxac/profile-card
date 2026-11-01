@@ -71,8 +71,8 @@ export default function Footer() {
                     </a>
                 </div>
                 {views !== null && (
-                    <p style={{ marginTop: '0.75rem', opacity: 0.7, fontSize: '0.75rem' }}>
-                        Total Visitors: <span style={{ fontWeight: 'bold', color: 'var(--primary)' }}>{views.toLocaleString()}</span>
+                    <p style={{ marginTop: '0.75rem', fontSize: '0.8125rem' }}>
+                        Total Visitors: <span className="footer-visitor-count">{views.toLocaleString()}</span>
                     </p>
                 )}
             </div>

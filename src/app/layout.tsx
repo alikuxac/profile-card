@@ -18,8 +18,8 @@ export const metadata: Metadata = {
   description: "Backend engineer portfolio building APIs, real-time apps, and edge infrastructure.",
   keywords: ["Alikuxac", "Backend Engineer", "Fullstack Developer", "Portfolio", "Links", "Donate"],
   icons: {
-    icon: "/pic.png",
-    apple: "/pic.png",
+    icon: "https://cdn.alikuxac.xyz/profile/pic.png",
+    apple: "https://cdn.alikuxac.xyz/profile/pic.png",
   },
   openGraph: {
     title: "Alikuxac - Backend Engineer",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     siteName: "Alikuxac Portfolio",
     images: [
       {
-        url: "/pic.png",
+        url: "https://cdn.alikuxac.xyz/profile/pic.png",
         width: 400,
         height: 400,
         alt: "Alikuxac Profile Picture",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "Alikuxac - Backend Engineer",
     description: "Backend engineer portfolio building APIs, real-time apps, and edge infrastructure.",
-    images: ["/pic.png"],
+    images: ["https://cdn.alikuxac.xyz/profile/pic.png"],
   },
 };
 
@@ -60,10 +60,13 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Preload hero background image to eliminate LCP delay */}
-        <link rel="preload" as="image" href="/bg.jpg" fetchPriority="high" />
-        {/* Preconnect to external API/CDN domains to reduce network roundtrips */}
+        <link rel="preload" as="image" href="https://cdn.alikuxac.xyz/profile/bg.jpg" fetchPriority="high" />
+        {/* Preconnect to external API/CDN domains to reduce network roundtrips (max <= 4) */}
+        <link rel="preconnect" href="https://cdn.alikuxac.xyz" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://cdn.alikuxac.xyz" />
         <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://img.vietqr.io" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://stats.g.doubleclick.net" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://stats.g.doubleclick.net" />
         <link rel="dns-prefetch" href="https://img.vietqr.io" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>

@@ -16,7 +16,7 @@ export default function Background() {
             pointerEvents: 'none'
         }}>
             <Image
-                src="/bg.jpg"
+                src="https://cdn.alikuxac.xyz/profile/bg.jpg"
                 alt="Background"
                 fill
                 priority
