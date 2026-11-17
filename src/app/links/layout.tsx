@@ -3,6 +3,9 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
     title: 'Links - Alikuxac',
     description: 'Direct links to profiles, channels, and projects by Alikuxac.',
+    alternates: {
+        canonical: '/links',
+    },
     openGraph: {
         title: 'Links - Alikuxac',
         description: 'Direct links to profiles, channels, and projects by Alikuxac.',

@@ -17,6 +17,20 @@ export const metadata: Metadata = {
   title: "Alikuxac - Backend Engineer",
   description: "Backend engineer portfolio building APIs, real-time apps, and edge infrastructure.",
   keywords: ["Alikuxac", "Backend Engineer", "Fullstack Developer", "Portfolio", "Links", "Donate"],
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   icons: {
     icon: "https://cdn.alikuxac.xyz/profile/pic.png",
     apple: "https://cdn.alikuxac.xyz/profile/pic.png",

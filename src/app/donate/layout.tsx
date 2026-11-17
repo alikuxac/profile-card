@@ -3,6 +3,9 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
     title: 'Donate - Alikuxac',
     description: 'Support development and infrastructure costs via bank transfer, MoMo, or crypto.',
+    alternates: {
+        canonical: '/donate',
+    },
     openGraph: {
         title: 'Donate - Alikuxac',
         description: 'Support development and infrastructure costs via bank transfer, MoMo, or crypto.',

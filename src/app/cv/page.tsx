@@ -4,6 +4,9 @@ import { cvData } from "@/config/cv";
 export const metadata: Metadata = {
   title: `CV | ${cvData.header.name} - ${cvData.header.title}`,
   description: `Curriculum Vitae of ${cvData.header.name} - ${cvData.header.title} based in ${cvData.header.location}.`,
+  alternates: {
+    canonical: "/cv",
+  },
   openGraph: {
     title: `CV | ${cvData.header.name} - ${cvData.header.title}`,
     description: `Curriculum Vitae of ${cvData.header.name} - ${cvData.header.title} based in ${cvData.header.location}.`,
